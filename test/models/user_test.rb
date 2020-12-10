@@ -73,7 +73,17 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "password should exist" do
-    @user.password = nil
+    no_password_user = User.new(name: "Example User", email: "email@example.com")
+    assert_not no_password_user.valid?
+  end
+
+  test "password should not be blank" do
+    @user.password = @user.password_confirmation = " " * 6
+    assert_not @user.valid?
+  end
+
+  test "password shoud be at least 6 characrters long" do
+    @user.password = @user.password_confirmation = "a" * 3
     assert_not @user.valid?
   end
 end
