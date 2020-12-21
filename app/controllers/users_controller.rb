@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:edit, :index, :update]
-  before_action :correct_user, only: [:edit, :update]
+  before_action :logged_in_user, only: %i[edit index update]
+  before_action :correct_user, only: %i[edit update]
 
   def index
     @users = User.paginate(page: params[:page])
@@ -19,7 +21,7 @@ class UsersController < ApplicationController
     if @user.save
       reset_session
       log_in @user
-      flash[:success] = "Welcome to the Tutorial App!"
+      flash[:success] = 'Welcome to the Tutorial App!'
       redirect_to @user
     else
       render 'new'
@@ -33,7 +35,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update(user_params)
-      flash[:success] = "Profile updated"
+      flash[:success] = 'Profile updated'
       redirect_to @user
     else
       render 'edit'
@@ -43,7 +45,12 @@ class UsersController < ApplicationController
   private
 
     def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation)
+      params.require(:user).permit(
+        :name,
+        :email,
+        :password,
+        :password_confirmation
+      )
     end
 
     # Before filters
@@ -52,7 +59,7 @@ class UsersController < ApplicationController
     def logged_in_user
       unless logged_in?
         store_location
-        flash[:danger] = "Please log in."
+        flash[:danger] = 'Please log in.'
         redirect_to login_url
       end
     end
